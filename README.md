@@ -1,15 +1,29 @@
-# TDD – Desenvolvimento de software guiado por testes by Instituto Tecnológico da Aeronáutica
+# Software de Caixa Eletrônico
 
-## Intrutores:
+## Intrucões:
 
-- [Cloves Fernandes](https://www.linkedin.com/in/clovistf/) (Professor Titular);
+Criar, utilizando TDD, uma classe chamada CaixaEletronico, juntamente com a classe ContaCorrente, que possuem os requisitos abaixo:
 
-- [Eduardo Guerra](https://www.linkedin.com/in/eduardo-guerra-b4633115b/) (Professor Colaborador).
+- A classe CaixaEletronico possui os métodos logar(), sacar(), depositar() e saldo() e todas retornam uma String com a mensagem que será exibida na tela do caixa eletrônico.
 
-## Objetivo
+- Existe uma classe chamada ContaCorrente que possui as informações da conta necessárias para executar as funcionalidades do CaixaEletronico. Essa classe faz parte da implementação e deve ser definida durante a sessão de TDD.
 
-O objetivo deste curso é expor você aos princípios e práticas de desenvolvimento guiado por testes, tanto para modelar quanto para desenvolver aplicações e componentes de software, sem abandonar os conceitos e princípios de orientação a objetos aprendidos no curso anterior. De fato, pregamos que tais conceitos e princípios fortalecem o emprego do TDD no desenvolvimento ágil de software com mais qualidade. Este curso terá um grande foco em atividades hands-on, permitindo a você captar todos os aspectos práticos da técnica e facilitar a sua aplicação quando estiver projetando e desenvolvendo software de maneira ágil nos próximos cursos.
+- As informações da classe ContaCorrente podem ser obtidas utilizando os métodos de uma interface chamada ServicoRemoto. Essa interface possui o método recuperarConta() que recupera uma conta baseada no seu número e o método persistirConta() que grava alterações, como uma mudança no saldo devido a um saque ou depósito. Não tem nenhuma implementação disponível da interface ServicoRemoto e deve ser utilizado um Mock Object para ela durante os testes.
 
-Os conceitos de desenvolvimento de software com Java apresentados neste curso incluem o seguinte: revisão de testes de unidade; automação de testes; desenvolvimento guiado por testes; ciclo do TDD; refatoração de código de produção; ciclo de refatoração; uso de objetos stubs e mocks; boas práticas no TDD; modelagem de software por meio do TDD.
+- O método persistirConta() da interface ServicoRemoto deve ser chamado apenas no caso de ser feito algum saque ou depósito com sucesso.
 
-Ao final deste curso, você terá amadurecido de tal modo suas habilidades de programação que será capaz de implementar, agora usando o TDD, versões modificadas e estendidas do componente de gamificação constante do Trabalho de Conclusão da Especialização, com base nas boas práticas exercitadas neste curso.
+- Ao executar o método saldo(), a mensagem retornada deve ser "O saldo é R$xx,xx" com o valor do saldo.
+
+- Ao executar o método sacar(), e a execução for com sucesso, deve retornar a mensagem "Retire seu dinheiro". Se o valor sacado for maior que o saldo da conta, a classe CaixaEletronico deve retornar uma String dizendo "Saldo insuficiente".
+
+- Ao executar o método depositar(), e a execução for com sucesso, deve retornar a mensagem "Depósito recebido com sucesso"
+
+- Ao executar o método login(), e a execução for com sucesso, deve retornar a mensagem "Usuário Autenticado". Caso falhe, deve retornar "Não foi possível autenticar o usuário"
+
+- Existe uma interface chamada Hardware que possui os métodos pegarNumeroDaContaCartao() para ler o número da conta do cartão para o login (retorna uma String com o número da conta), entregarDinheiro() que entrega o dinheiro no caso do saque (retorna void) e lerEnvelope() que recebe o envelope com dinheiro na operação de depósito (retorna void). Não tem nenhuma implementação disponível da interface Hardware e deve ser utilizado um Mock Object para ela durante os testes.
+
+- Todos os metodos da interface Hardware podem lançar uma exceção dizendo que houve uma falha de funcionamento do hardware.
+
+Deve-se criar testes também para os casos de falha, principalmente na classe Hardware que pode falhar a qualquer momento devido a um mau funcionamento.
+
+Lembre-se de usar o TDD e ir incrementando as funcionalidades aos poucos.
