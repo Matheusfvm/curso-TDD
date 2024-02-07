@@ -1,6 +1,6 @@
 # Software de Caixa Eletrônico
 
-## Intrucões:
+## Instrucões:
 
 Criar, utilizando TDD, uma classe chamada CaixaEletronico, juntamente com a classe ContaCorrente, que possuem os requisitos abaixo:
 
