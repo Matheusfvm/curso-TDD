@@ -1,5 +1,6 @@
 package classes;
 
+import excecoes.EnvelopeNaoRecebidoException;
 import excecoes.NumeroContaNaoEncontradoException;
 import excecoes.ProblemaLeituraNumeroCartaoExeption;
 import excecoes.SaldoContaInsuficienteException;
@@ -11,10 +12,10 @@ import mocks.MockHardware;
 public class CaixaEletronico {
 	
 	private String _numeroContaCartao;
-		
-	private ServicoRemoto _mockServicoRemoto;
 	
 	private ContaCorrente _contaCorrenteRecuperada;
+		
+	private ServicoRemoto _mockServicoRemoto;
 	
 	private Hardware _mockHardware;
 	
@@ -45,10 +46,21 @@ public class CaixaEletronico {
 			throw new SaldoContaInsuficienteException("Saldo Insuficiente");
 		}
 		_mockServicoRemoto.persistirConta(-valorSaque);
-		return "Retire seu dinheiro";
+		_mockHardware.entregarDinheiro();
+		return "Retire seu dinheiro";		
+	}
+	
+	public String depositar(Integer valorDeposito) {
+		try {
+			_mockHardware.lerEnvelope();
+			_mockServicoRemoto.persistirConta(valorDeposito);
+		} catch (EnvelopeNaoRecebidoException excecao) {
+			return excecao.getMessage();
+		}
+		return "Depósito recebido com sucesso";
 	}
 		
-	// Getters
+	// Getters e setters
 	
 	public String get_numeroContaCartao() {
 		return _numeroContaCartao;

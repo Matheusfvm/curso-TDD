@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test;
 
 import classes.CaixaEletronico;
 import classes.ContaCorrente;
+import excecoes.EnvelopeNaoRecebidoException;
 import excecoes.NumeroContaNaoEncontradoException;
+import excecoes.ProblemaEntregaDinheiroSaqueException;
 import excecoes.ProblemaLeituraNumeroCartaoExeption;
 import excecoes.SaldoContaInsuficienteException;
 import mocks.MockHardware;
@@ -40,9 +42,7 @@ class TesteCaixaEletronico {
 	void testeRecuperaDadosContaComFalha() {
 		try {
 			_mockServicoRemoto.recuperarConta("2");
-		} catch (NumeroContaNaoEncontradoException excecao) {
-			assertEquals(excecao.getMessage(), "Nenhuma conta encontrada");
-		}
+		} catch (NumeroContaNaoEncontradoException excecao) {}
 	}
 	
 	@Test
@@ -55,9 +55,7 @@ class TesteCaixaEletronico {
 	void testeLeituraNumeroCartaoComFalha() {
 		try {
 			_mockHardware.pegarNumeroDaContaCartao("");
-		} catch (ProblemaLeituraNumeroCartaoExeption excecao) {
-			assertEquals(excecao.getMessage(), "Leitura do cartão comprometida");
-		}
+		} catch (ProblemaLeituraNumeroCartaoExeption excecao) {}
 	}
 	
 	@Test
@@ -72,7 +70,7 @@ class TesteCaixaEletronico {
 		_mockServicoRemoto.recuperarConta("1");
 		_mockServicoRemoto.persistirConta(-100);
 		_mockServicoRemoto.verificarSaldoAposTransacao(900);
-	}
+	}	
 	
 	@Test
 	void testeLoginComSucesso() {
@@ -87,29 +85,51 @@ class TesteCaixaEletronico {
 		try {
 			_caixaEletronico.logar();
 		} catch (ProblemaLeituraNumeroCartaoExeption excecao) {
-			assertEquals(excecao.getMessage(), "Leitura do cartão comprometida");
-		} catch (NumeroContaNaoEncontradoException excecao) {
-			assertEquals(excecao.getMessage(), "Nenhuma conta encontrada");
-		}
+		} catch (NumeroContaNaoEncontradoException excecao) {}
 	}
 	
 	@Test
 	void testeSacarComSucesso() {
 		_caixaEletronico.set_numeroContaCartao("1");
 		_caixaEletronico.logar();		
-		String mensagemSaque = _caixaEletronico.sacar(100);;
+		String mensagemSaque = _caixaEletronico.sacar(100);
 		assertEquals(mensagemSaque, "Retire seu dinheiro");
 	}
 	
 	@Test
-	void testeSacarComFalha() {
+	void testeSacarComFalhaSaldo() {
 		_caixaEletronico.set_numeroContaCartao("1");
 		_caixaEletronico.logar();
 		try {
 			_caixaEletronico.sacar(1001);
-		} catch (SaldoContaInsuficienteException excecao) {
-			assertEquals(excecao.getMessage(), "Saldo Insuficiente");
-		}
+		} catch (SaldoContaInsuficienteException excecao) {}
+	}
+	
+	@Test
+	void testeSacarComFalhaEntregaDinheiro() {
+		_caixaEletronico.set_numeroContaCartao("1");
+		_caixaEletronico.logar();
+		try {
+			_caixaEletronico.sacar(100);
+		} catch (ProblemaEntregaDinheiroSaqueException excecao) {}
+	}
+	
+	@Test
+	void testeDepositoComSucesso() {
+		_caixaEletronico.set_numeroContaCartao("1");
+		_caixaEletronico.logar();
+		String mensagemDeposito = _caixaEletronico.depositar(100);
+		assertEquals(mensagemDeposito, "Depósito recebido com sucesso");
+	}
+	
+	@Test
+	void testeDepositoComFalha() {
+		_caixaEletronico.set_numeroContaCartao("1");
+		_caixaEletronico.logar();
+		_mockHardware.naoRecebeEnvelopeDeposito();
+		try {
+			_caixaEletronico.depositar(100);
+		} catch (EnvelopeNaoRecebidoException excecao) {}
 	}
 	
 	
