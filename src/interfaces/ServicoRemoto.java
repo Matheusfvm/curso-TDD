@@ -1,6 +1,10 @@
 package interfaces;
 
+import classes.ContaCorrente;
+
 public interface ServicoRemoto {
 	
-	public void recuperarConta(String numeroConta);
+	public ContaCorrente recuperarConta(String numeroConta);
+	
+	public void persistirConta(Integer valorTransacao);
 }

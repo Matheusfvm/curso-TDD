@@ -12,8 +12,7 @@ public class ContaCorrente {
 		_numeroContaCorrente = numeroContaCorrente;
 		_nomeCorrentista = nomeCorrentista;
 		_saldoConta = saldoConta;
-	}
-	
+	}	
 	
 	// Getters
 	
@@ -28,5 +27,22 @@ public class ContaCorrente {
 	public Integer get_saldoConta() {
 		return _saldoConta;
 	}
+
+
+	public void set_numeroContaCorrente(String _numeroContaCorrente) {
+		this._numeroContaCorrente = _numeroContaCorrente;
+	}
+
+
+	public void set_nomeCorrentista(String _nomeCorrentista) {
+		this._nomeCorrentista = _nomeCorrentista;
+	}
+
+
+	public void set_saldoConta(Integer _saldoConta) {
+		this._saldoConta = _saldoConta;
+	}
+	
+	
 
 }

@@ -3,7 +3,7 @@ package mocks;
 import excecoes.ProblemaLeituraNumeroCartaoExeption;
 import interfaces.Hardware;
 
-public class MockLeNumeroCartao implements Hardware{
+public class MockHardware implements Hardware{
 	
 	private String _numeroContaCartao;
 

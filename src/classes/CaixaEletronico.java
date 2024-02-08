@@ -2,30 +2,35 @@ package classes;
 
 import excecoes.NumeroContaNaoEncontradoException;
 import excecoes.ProblemaLeituraNumeroCartaoExeption;
+import excecoes.SaldoContaInsuficienteException;
 import interfaces.Hardware;
 import interfaces.ServicoRemoto;
-import mocks.MockLeNumeroCartao;
+import mocks.MockHardware;
+
 
 public class CaixaEletronico {
 	
 	private String _numeroContaCartao;
+		
+	private ServicoRemoto _mockServicoRemoto;
 	
-	private ServicoRemoto _mockRecuperaDadosContaCorrente;
+	private ContaCorrente _contaCorrenteRecuperada;
 	
-	private Hardware _mockLeNumeroCartao;
+	private Hardware _mockHardware;
+	
 
-	public void adicionarMockRecuperaDadosContaCorrente(ServicoRemoto mockRecuperaDadosContaCorrente) {
-		_mockRecuperaDadosContaCorrente = mockRecuperaDadosContaCorrente;
+	public void adicionarMockServicoRemoto(ServicoRemoto mockServicoRemoto) {
+		_mockServicoRemoto = mockServicoRemoto;
 	}
 
-	public void adicionaMockLeNumeroCartao(MockLeNumeroCartao mockLeNumeroCartao) {
-		_mockLeNumeroCartao = mockLeNumeroCartao;				
+	public void adicionarMockHardware(MockHardware mockHardware) {
+		_mockHardware = mockHardware;				
 	}
 
 	public String logar() {
 		try {
-			String numeroContaCartao = _mockLeNumeroCartao.pegarNumeroDaContaCartao(get_numeroContaCartao());
-			_mockRecuperaDadosContaCorrente.recuperarConta(numeroContaCartao);
+			String numeroContaCartao = _mockHardware.pegarNumeroDaContaCartao(get_numeroContaCartao());
+			_contaCorrenteRecuperada = _mockServicoRemoto.recuperarConta(numeroContaCartao);
 			return "Usuário Autenticado";
 		} catch (ProblemaLeituraNumeroCartaoExeption excecao) {
 			return excecao.getMessage();
@@ -35,6 +40,13 @@ public class CaixaEletronico {
 
 	}
 
+	public String sacar(Integer valorSaque) {
+		if ((_contaCorrenteRecuperada.get_saldoConta() - valorSaque) < 0) {
+			throw new SaldoContaInsuficienteException("Saldo Insuficiente");
+		}
+		_mockServicoRemoto.persistirConta(-valorSaque);
+		return "Retire seu dinheiro";
+	}
 		
 	// Getters
 	
@@ -45,4 +57,5 @@ public class CaixaEletronico {
 	public void set_numeroContaCartao(String _numeroContaCartao) {
 		this._numeroContaCartao = _numeroContaCartao;
 	}
+
 }
