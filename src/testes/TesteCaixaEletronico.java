@@ -12,6 +12,7 @@ import excecoes.EnvelopeNaoRecebidoException;
 import excecoes.NumeroContaNaoEncontradoException;
 import excecoes.ProblemaEntregaDinheiroSaqueException;
 import excecoes.ProblemaLeituraNumeroCartaoExeption;
+import excecoes.ProblemaSaldoException;
 import excecoes.SaldoContaInsuficienteException;
 import mocks.MockHardware;
 import mocks.MockServicoRemoto;
@@ -132,6 +133,40 @@ class TesteCaixaEletronico {
 		} catch (EnvelopeNaoRecebidoException excecao) {}
 	}
 	
+	@Test 
+	void testeSaldoComSucesso() {
+		_caixaEletronico.set_numeroContaCartao("1");
+		_caixaEletronico.logar();
+		String mensagemSaldo = _caixaEletronico.saldo();
+		assertEquals(mensagemSaldo, "O saldo é R$1000,00");
+	}
 	
+	@Test 
+	void testeSaldoComFalha() {
+		_caixaEletronico.set_numeroContaCartao("1");
+		_caixaEletronico.logar();
+		_caixaEletronico.darProblemaSaldo();
+		try {
+			_caixaEletronico.saldo();
+		} catch (ProblemaSaldoException excecao) {}
+	}
+	
+	@Test
+	void consultarSaldoAposSaque() {
+		_caixaEletronico.set_numeroContaCartao("1");
+		_caixaEletronico.logar();
+		_caixaEletronico.sacar(100);
+		String mensagemSaldo = _caixaEletronico.saldo();
+		assertEquals(mensagemSaldo, "O saldo é R$900,00");
+	}
+	
+	@Test
+	void consultarSaldoAposDeposito() {
+		_caixaEletronico.set_numeroContaCartao("1");
+		_caixaEletronico.logar();
+		_caixaEletronico.depositar(100);
+		String mensagemSaldo = _caixaEletronico.saldo();
+		assertEquals(mensagemSaldo, "O saldo é R$1100,00");
+	}
 	
 }

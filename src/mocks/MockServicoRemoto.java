@@ -42,8 +42,8 @@ public class MockServicoRemoto implements ServicoRemoto {
 		assertEquals(_contaCorrenteRecuperada.get_saldoConta(), saldoContaCorrenteAposTransacao);
 	}
 	
-	public void adicionaContaCorrente(ContaCorrente contaCorrente) {
-		
+	public Integer recuperaSaldoContaCorrenteBancoDados() {
+		return _contaCorrenteNoBancoDados.get_saldoConta();
 	}
 		
 }

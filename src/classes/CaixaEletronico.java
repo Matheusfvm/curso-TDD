@@ -3,6 +3,7 @@ package classes;
 import excecoes.EnvelopeNaoRecebidoException;
 import excecoes.NumeroContaNaoEncontradoException;
 import excecoes.ProblemaLeituraNumeroCartaoExeption;
+import excecoes.ProblemaSaldoException;
 import excecoes.SaldoContaInsuficienteException;
 import interfaces.Hardware;
 import interfaces.ServicoRemoto;
@@ -14,6 +15,8 @@ public class CaixaEletronico {
 	private String _numeroContaCartao;
 	
 	private ContaCorrente _contaCorrenteRecuperada;
+	
+	private Boolean _darProblema = false;
 		
 	private ServicoRemoto _mockServicoRemoto;
 	
@@ -51,14 +54,24 @@ public class CaixaEletronico {
 	}
 	
 	public String depositar(Integer valorDeposito) {
-		try {
-			_mockHardware.lerEnvelope();
-			_mockServicoRemoto.persistirConta(valorDeposito);
-		} catch (EnvelopeNaoRecebidoException excecao) {
-			return excecao.getMessage();
-		}
+		_mockHardware.lerEnvelope();
+		_mockServicoRemoto.persistirConta(valorDeposito);
 		return "Depósito recebido com sucesso";
 	}
+	
+	public String saldo() {		
+		if (_darProblema) {
+			throw new ProblemaSaldoException("Problema com a visualização do saldo");			
+		}
+		Integer saldoContaCorrente = _contaCorrenteRecuperada.get_saldoConta();
+		float saldoContaCorrenteDecimal = (float) saldoContaCorrente;
+		return "O saldo é R$" + String.format("%.2f", saldoContaCorrenteDecimal);
+	}
+	
+	public void darProblemaSaldo() {
+		_darProblema = true;
+	}
+	
 		
 	// Getters e setters
 	
@@ -69,5 +82,4 @@ public class CaixaEletronico {
 	public void set_numeroContaCartao(String _numeroContaCartao) {
 		this._numeroContaCartao = _numeroContaCartao;
 	}
-
 }
